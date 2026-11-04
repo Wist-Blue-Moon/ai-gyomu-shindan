@@ -21,3 +21,18 @@ body:has(#intro:not(.hidden)) footer{flex-shrink:0;padding:8px 0;font-size:.6rem
 @media(max-height:420px){body:has(#intro:not(.hidden)){height:auto;min-height:100dvh;overflow:auto}body:has(#intro:not(.hidden)) .game-home{padding:16px 0}}
 
 #consent-dialog{width:min(440px,calc(100% - 32px));max-height:85dvh;overflow:auto;border:1px solid #cbdceb;border-radius:22px;padding:26px;color:#163e64;background:#f7fbff;box-shadow:0 24px 80px #071e3d55}#consent-dialog::backdrop{background:#071e3da6}#consent-dialog h2{font-size:1.25rem;margin:0 0 16px}#consent-dialog p{line-height:1.8}.dialog-actions{display:flex;gap:12px;margin-top:24px}.dialog-actions button{flex:1}#email-result{width:100%}
+
+/* Diagnosis result: character art and readable sentence spacing */
+.compact-result{max-width:660px;padding:clamp(20px,5vw,34px);text-align:left;background:linear-gradient(160deg,#fff 0%,#f7fbff 100%)}
+.compact-result>.game-tag{text-align:center;color:#236ca8}
+.result-hero{display:grid;grid-template-columns:minmax(130px,40%) 1fr;gap:clamp(12px,3vw,24px);align-items:center;margin:14px 0 20px}
+.character-frame{display:grid;place-items:center;min-height:190px;aspect-ratio:1;background:radial-gradient(circle at 50% 58%,#e4f4ff 0%,#f4faff 53%,transparent 72%);border-radius:30px}
+.result-character{display:block;width:100%;height:auto;max-height:260px;object-fit:contain;filter:drop-shadow(0 13px 12px #315c872b);animation:character-appear .6s ease-out both}
+.result-heading h2{font-size:clamp(1.45rem,4vw,2rem);margin:0 0 10px;color:#0b3158;line-height:1.4}
+.result-benefit,.solution-box p,.human-check,.result-note{white-space:pre-line;overflow-wrap:anywhere}
+.result-benefit{margin:0;font-size:.94rem;line-height:1.8}
+.solution-box{padding:18px 20px;border:1px solid #d5eaff;background:#edf7ff}
+.solution-box p{line-height:1.8}.human-check{padding:0 3px;line-height:1.8}.result-note{text-align:center;margin-top:18px}
+@keyframes character-appear{from{opacity:0;transform:translateY(15px) scale(.92)}to{opacity:1;transform:translateY(0) scale(1)}}
+@media(max-width:540px){.compact-result{padding:20px}.result-hero{grid-template-columns:1fr;gap:4px;text-align:center;margin-top:8px}.character-frame{width:min(60vw,218px);min-height:0;margin:auto}.result-character{max-height:218px}.result-heading h2{font-size:1.55rem}.result-benefit{font-size:.9rem;text-align:left}.solution-box{margin-top:8px}}
+@media(prefers-reduced-motion:reduce){.result-character{animation:none}}
