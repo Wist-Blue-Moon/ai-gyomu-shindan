@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#071e3d"><meta name="referrer" content="no-referrer"><meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'">
+  <meta name="description" content="水産業の業務の困りごとから、改善の方向性を考える2分の簡易診断。">
+  <title>AI業務改善・簡易診断 | Wistellart</title>
+  <link rel="stylesheet" href="design.css">
+  <script defer src="app.js"></script>
+</head>
+<body>
+  <header class="topbar"><div class="wrap topbar-inner"><span class="brand">Wistellart<span class="brand-dot">.</span></span><span class="event">水産DX EXPO 2026</span><button id="sound-toggle" class="sound-toggle" type="button" aria-pressed="true">音 ON</button></div></header>
+  <main class="wrap">
+    <section class="game-home" id="intro">
+      <p class="game-tag">水産業 × AI / 5問で発見</p>
+      <h1>仕事の手間を、<br><em>AIと減らそう。</em></h1>
+      <div class="game-island" aria-hidden="true"><div class="sea-ring ring-one"></div><div class="sea-ring ring-two"></div><div class="game-boat">⚓</div><span class="island-spark">✦</span><span class="island-fish">⋗</span></div>
+      <p class="game-intro">あなたの仕事に合う<br><strong>AIサポートシステム</strong>を見つけよう。</p>
+      <button class="primary game-start" type="button" id="start">診断をスタート <span aria-hidden="true">▶</span></button>
+      <p class="game-small">無料・約2分・登録不要<br>音が出ます。右上のボタンでOFFにできます。</p>
+    </section>
+    <div id="about" class="hidden"></div>
+    <section class="panel hidden" id="form-panel" aria-labelledby="form-title">
+      <p class="quest-label">業務改善クエスト <span aria-hidden="true">⚓</span></p><div class="progress-head"><span id="step-count">1 / 5</span><span>当てはまるものを選んでください</span></div>
+      <div class="progress-track"><div id="progress-fill"></div></div>
+      <form id="diagnosis-form">
+        <h2 id="form-title"></h2>
+        <p id="step-help" class="help"></p>
+        <div id="choices" class="choices"></div>
+        <div class="actions"><button type="button" class="secondary" id="back">戻る</button><button type="button" class="primary" id="next" disabled>次へ <span aria-hidden="true">→</span></button></div>
+      </form>
+    </section>
+
+    <section class="hidden treasure-stage" id="treasure" aria-labelledby="treasure-title"><p class="eyebrow">ALL QUESTIONS COMPLETE</p><h2 id="treasure-title" tabindex="-1">改善のヒントが<br>見つかりました。</h2><p>あなたの回答をまとめた診断書を開きましょう。</p><div class="chest-art" aria-hidden="true"><div class="treasure-rays"></div><div class="chest-lid"></div><div class="chest-base"><span>✦</span></div><i class="spark s1">✦</i><i class="spark s2">✧</i><i class="spark s3">✦</i></div><button id="open-treasure" type="button" class="primary">診断書を開く ↗</button></section><section class="hidden" id="result" aria-live="polite">
+      <article class="report compact-result" aria-labelledby="report-title">
+        <div class="result-medal" aria-hidden="true">✦</div><p class="game-tag">あなたにおすすめの開発プラン</p>
+        <h2 id="report-title"></h2><p id="result-benefit" class="result-benefit"></p>
+        <div class="solution-box"><span>AIサポートシステムに任せること</span><p id="solution-flow"></p></div>
+        <p class="human-check" id="human-check"></p>
+        <p class="result-note">回答に応じた開発案です。実現方法と効果は業務を確認して判断します。</p>
+      </article>
+      <button id="consult-open" type="button" class="primary consult-main">このシステムについて相談する ↗</button>
+      <section class="share-panel hidden" id="consult-panel"><p class="eyebrow">NEXT STEP</p><h3>あなたの現場に合う<br>仕組みをつくりませんか。</h3><p>Wistellartが、今の仕事に合わせたAIサポートシステムの設計・試作・導入を一緒に検討します。</p><div class="consult-benefits"><span>業務の流れを整理</span><span>改善候補を優先づけ</span><span>小さな試作を検討</span></div><label class="company-label" for="company">企業名・屋号 <span>相談時は必須</span></label><input id="company" required aria-describedby="company-error" type="text" maxlength="80" autocomplete="organization" placeholder="企業名・屋号をご入力ください"><p id="company-error" role="alert" class="input-error"></p><p class="fine">企業を特定して相談に対応するために使用します。入力した企業名と診断結果をメール本文に含めます。</p><details id="preview"><summary>送信内容を確認する</summary><pre id="mail-preview"></pre></details><label class="consent-label"><input id="consent" type="checkbox">企業名と診断内容をWistellartへ共有し、相談への返信を受けることに同意します。</label><div class="share-actions"><button class="primary" type="button" id="copy-result">本文をコピーして送る <span aria-hidden="true">↗</span></button><button class="secondary" type="button" id="email-result" disabled>標準メールを開く</button></div><p class="fine" id="share-status" role="status"></p><p class="fine">「標準メール」は端末に設定されたアプリを開きます。Gmailなど普段のメールを使いたい場合は、本文をコピーして新規メールに貼り付けてください。送信先：<span id="recipient"></span>。アプリを開いただけでは送信されません。メール送信後は、ご自身と受信側のメールサービスに内容が保存されます。</p><textarea id="copy-fallback" class="hidden" readonly aria-label="手動コピー用の相談内容"></textarea></section>
+      <div class="result-actions"><button class="secondary" type="button" id="restart">最初から診断する</button></div>
+    </section>
+  </main>
+  <footer class="wrap compact-footer"><p>Wistellart｜水産DX EXPO 2026</p><p>本診断は業務改善を考えるための簡易的な案内です。AIによるリアルタイム分析ではありません。</p></footer>
+</body>
+</html>
