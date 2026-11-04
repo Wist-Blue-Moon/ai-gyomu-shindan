@@ -56,7 +56,7 @@ let answers = {};
 function label(key,value){return steps.find(s=>s.key===key).options.find(o=>o[0]===value)?.[1] || "";}
 function showStep(){
   const step=steps[current];
-  $("step-count").textContent=`${current+1} / ${steps.length}`;
+  $("step-count").textContent=`${current+1}/${steps.length}`;
   $("progress-fill").style.width=`${((current+1)/steps.length)*100}%`;
   $("form-title").textContent=step.title;
   $("step-help").textContent=step.help;
@@ -119,14 +119,14 @@ $("email-result").addEventListener("click",()=>{
   window.location.href=`mailto:${CONTACT_EMAIL}?subject=${subject}&body=${body}`;
 });
 $("start").addEventListener("click",()=>{chime();$("intro").classList.add("hidden");$("about").classList.add("hidden");$("form-panel").classList.remove("hidden");showStep();});
-$("next").addEventListener("click",()=>{if(!answers[steps[current].key])return;if(current<steps.length-1){current++;showStep();}else{showTreasure();}});
-$("back").addEventListener("click",()=>{if(current>0){current--;showStep();}});
+$("next").addEventListener("click",()=>{if(!answers[steps[current].key])return;chime("next");if(current<steps.length-1){current++;showStep();}else{showTreasure();}});
+$("back").addEventListener("click",()=>{if(current>0){chime("back");current--;showStep();}});
 $("restart").addEventListener("click",()=>{answers={};current=0;$("company").value="";$("consent").checked=false;$("copy-fallback").value="";$("copy-fallback").classList.add("hidden");$("mail-preview").textContent="";$("company-error").textContent="";$("preview").open=false;$("consult-panel").classList.add("hidden");$("result").classList.add("hidden");$("intro").classList.remove("hidden");$("about").classList.remove("hidden");window.scrollTo({top:0,behavior:"instant"});});
 
 let soundOn=true, audioContext;
 async function chime(complete=false){
  if(!soundOn)return;
- try{const Audio=window.AudioContext||window.webkitAudioContext;if(!Audio)throw Error('unsupported');audioContext ||= new Audio();await audioContext.resume();if(audioContext.state!=='running')throw Error('suspended');const now=audioContext.currentTime+.025;for(const [i,f] of (complete?[523.25,659.25,783.99]:[660]).entries()){const o=audioContext.createOscillator(),g=audioContext.createGain();o.connect(g);g.connect(audioContext.destination);o.type='sine';o.frequency.value=f;g.gain.setValueAtTime(0,now+i*.1);g.gain.linearRampToValueAtTime(.035,now+i*.1+.015);g.gain.exponentialRampToValueAtTime(.001,now+i*.1+.2);o.start(now+i*.1);o.stop(now+i*.1+.22);}}catch{ $('sound-toggle').textContent='音 再試行';$('sound-toggle').setAttribute('aria-label','音声を再試行。端末の音量と消音設定もご確認ください。');soundOn=false;}
+ try{const Audio=window.AudioContext||window.webkitAudioContext;if(!Audio)throw Error('unsupported');audioContext ||= new Audio();await audioContext.resume();if(audioContext.state!=='running')throw Error('suspended');const now=audioContext.currentTime+.025;for(const [i,f] of (complete==="back"?[1046.5,880,783.99,659.25,523.25]:complete==="next"?[523.25,659.25,783.99,880,1046.5]:complete===true?[523.25,659.25,783.99]:[660]).entries()){const o=audioContext.createOscillator(),g=audioContext.createGain();o.connect(g);g.connect(audioContext.destination);o.type='sine';o.frequency.value=f;g.gain.setValueAtTime(0,now+i*.1);g.gain.linearRampToValueAtTime(.035,now+i*.1+.015);g.gain.exponentialRampToValueAtTime(.001,now+i*.1+.2);o.start(now+i*.1);o.stop(now+i*.1+.22);}}catch{ $('sound-toggle').textContent='音 再試行';$('sound-toggle').setAttribute('aria-label','音声を再試行。端末の音量と消音設定もご確認ください。');soundOn=false;}
 }
 $('sound-toggle').addEventListener('click',()=>{soundOn=!soundOn;$('sound-toggle').textContent=soundOn?'音 ON':'音 OFF';$('sound-toggle').setAttribute('aria-pressed',String(soundOn));chime();});
 document.addEventListener('change',e=>{if(e.target.matches('input[type="radio"]'))chime();});
