@@ -289,13 +289,13 @@ function showStep(){
   $("form-panel").classList.remove("step-enter"); void $("form-panel").offsetWidth; $("form-panel").classList.add("step-enter");
   window.scrollTo({top:0,behavior:"instant"});
 }
-function sentenceLines(text){return text.replace(/。(?=\S)/g,"。\n");}
+function sentenceLines(text){return text.replace(/。\s*/g,"。\n").trimEnd();}
 function showResult(){
   $("form-panel").classList.add("hidden");$("result").classList.remove("hidden");
   const plan=buildPlan();
   $("report-title").textContent=plan.title;
   $("result-benefit").textContent=sentenceLines(plan.benefit);
-  $("solution-flow").textContent=sentenceLines(plan.flow);
+  $("solution-flow").replaceChildren(...plan.flow.split(/\s*→\s*/).map(text=>{const item=document.createElement("li");item.textContent=sentenceLines(text);return item;}));
   $("human-check").textContent=sentenceLines(plan.check);
   $("result-character").src=`character-${plan.character||"discovery"}.png`;
   $("result-character").alt=`${plan.title}の案内キャラクター`;
@@ -437,3 +437,8 @@ function buildPlan(){
  return {...base,benefit:`「${task}」の負担を減らす専用システムをご提案します。${source||''}${outcomes[answers.pain]||''}`,check:base.check+' '+start};
 }
 $('consult-open').addEventListener('click',()=>{chime();$('consult-panel').classList.remove('hidden');$('consult-panel').scrollIntoView({behavior:'smooth'});$('company').focus({preventScroll:true});});
+
+// Static result and consultation paragraphs use the same sentence spacing.
+document.querySelectorAll('#result p, #consent-dialog p').forEach(p=>{
+ if(!p.children.length && p.textContent.includes('。'))p.textContent=sentenceLines(p.textContent);
+});
