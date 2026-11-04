@@ -41,10 +41,16 @@
         <p class="result-note">回答に応じた開発案です。実現方法と効果は業務を確認して判断します。</p>
       </article>
       <button id="consult-open" type="button" class="primary consult-main">このシステムについて相談する ↗</button>
-      <section class="share-panel hidden" id="consult-panel"><p class="eyebrow">NEXT STEP</p><h3>あなたの現場に合う<br>仕組みをつくりませんか。</h3><p>Wistellartが、今の仕事に合わせたAIサポートシステムの設計・試作・導入を一緒に検討します。</p><div class="consult-benefits"><span>業務の流れを整理</span><span>改善候補を優先づけ</span><span>小さな試作を検討</span></div><label class="company-label" for="company">企業名・屋号 <span>相談時は必須</span></label><input id="company" required aria-describedby="company-error" type="text" maxlength="80" autocomplete="organization" placeholder="企業名・屋号をご入力ください"><p id="company-error" role="alert" class="input-error"></p><p class="fine">企業を特定して相談に対応するために使用します。入力した企業名と診断結果をメール本文に含めます。</p><details id="preview"><summary>送信内容を確認する</summary><pre id="mail-preview"></pre></details><label class="consent-label"><input id="consent" type="checkbox">企業名と診断内容をWistellartへ共有し、相談への返信を受けることに同意します。</label><div class="share-actions"><button class="primary" type="button" id="copy-result">本文をコピーして送る <span aria-hidden="true">↗</span></button><button class="secondary" type="button" id="email-result" disabled>標準メールを開く</button></div><p class="fine" id="share-status" role="status"></p><p class="fine">「標準メール」は端末に設定されたアプリを開きます。Gmailなど普段のメールを使いたい場合は、本文をコピーして新規メールに貼り付けてください。送信先：<span id="recipient"></span>。アプリを開いただけでは送信されません。メール送信後は、ご自身と受信側のメールサービスに内容が保存されます。</p><textarea id="copy-fallback" class="hidden" readonly aria-label="手動コピー用の相談内容"></textarea></section>
+      <section class="share-panel hidden" id="consult-panel"><p class="eyebrow">NEXT STEP</p><h3>あなたの現場に合う<br>仕組みをつくりませんか。</h3><p>Wistellartが、今の仕事に合わせたAIサポートシステムの設計・試作・導入を一緒に検討します。</p><div class="consult-benefits"><span>業務の流れを整理</span><span>改善候補を優先づけ</span><span>小さな試作を検討</span></div><label class="company-label" for="company">企業名・屋号 <span>相談時は必須</span></label><input id="company" required aria-describedby="company-error" type="text" maxlength="80" autocomplete="organization" placeholder="企業名・屋号をご入力ください"><p id="company-error" role="alert" class="input-error"></p><p class="fine">相談に対応するため、入力内容を使用します。</p><details id="preview"><summary>送信内容を確認する</summary><pre id="mail-preview"></pre></details><div class="share-actions"><button class="primary" type="button" id="email-result" disabled>メールを送信する</button></div><p class="fine" id="share-status" role="status"></p><p class="fine">同意の確認後、端末のメールアプリが開きます。内容を確認し、メールアプリで送信してください。</p><details><summary>メールアプリが開かない場合</summary><p class="fine">端末のメールアプリと送信アカウントの設定をご確認ください。解決しない場合はブース担当者へお声がけください。</p><p class="fine">送信先：<span id="recipient"></span></p></details></section>
       <div class="result-actions"><button class="secondary" type="button" id="restart">最初から診断する</button></div>
     </section>
   </main>
+  <dialog id="consent-dialog" aria-labelledby="consent-title" aria-describedby="consent-description">
+    <h2 id="consent-title">相談内容の共有について</h2>
+    <p id="consent-description">企業名と診断内容をWistellartへ共有し、相談への返信を受けることに同意しますか？</p>
+    <p class="fine">メール送信後は、ご自身と受信側のメールサービスに内容が保存されます。</p>
+    <div class="dialog-actions"><button type="button" class="secondary" id="consent-no" autofocus>いいえ</button><button type="button" class="primary" id="consent-yes">はい</button></div>
+  </dialog>
   <footer class="wrap compact-footer"><p>Wistellart｜水産DX EXPO 2026</p><p>本診断は業務改善を考えるための簡易的な案内です。AIによるリアルタイム分析ではありません。</p></footer>
 </body>
 </html>

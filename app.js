@@ -81,7 +81,7 @@ function showResult(){
   $("solution-flow").textContent=plan.flow;
   $("human-check").textContent=plan.check;
   $("email-result").disabled=!CONTACT_EMAIL;
-  $("share-status").textContent=CONTACT_EMAIL ? `送信先：${CONTACT_EMAIL}。メールアプリで内容を確認し、送信してください。` : "送信先メールアドレスを準備中です。現在は結果のコピーをご利用いただけます。";
+  $("share-status").textContent=CONTACT_EMAIL ? "" : "送信先メールアドレスを準備中です。";
   updatePreview();
   $("result").scrollIntoView({behavior:"instant"});
 }
@@ -96,32 +96,34 @@ function validateConsultation(){
  const name=$("company").value.trim();
  if(!name){$("company-error").textContent="相談する企業名・屋号をご入力ください。";$("company").focus();return false;}
  $("company-error").textContent="";
- if(!$("consent").checked){$("share-status").textContent="送信内容を確認し、共有への同意にチェックしてください。";$("preview").open=true;$("consent").focus();return false;}
  return true;
 }
-$("company").addEventListener("input",()=>{$("consent").checked=false; updatePreview();});
+$("company").addEventListener("input",()=>{updatePreview();});
 $("recipient").textContent=CONTACT_EMAIL;
 $("consult-open").classList.toggle("hidden",!CONTACT_EMAIL);
 function resultText(){
  const plan=buildPlan();
  return ["AI業務改善・簡易診断｜Wistellart",`企業名：${$("company").value.trim()||"未入力"}`,"", "【提案されたシステム】",plan.title,plan.benefit,plan.flow,plan.check,"", "【相談の参考：回答内容】",...steps.map(s=>`${s.title} ${label(s.key,answers[s.key])}`),"", "実現方法と効果は業務を確認して判断します。"].join("\n");
 }
-$("copy-result").addEventListener("click",async()=>{
-  if(!validateConsultation())return;
-  try{await navigator.clipboard.writeText(mailBody());$("share-status").textContent="診断内容をコピーしました。送信先と内容を確認してからお送りください。";}
-  catch{$("copy-fallback").value=mailBody();$("copy-fallback").classList.remove("hidden");$("copy-fallback").focus();$("copy-fallback").select();$("share-status").textContent="下の本文を選択してコピーし、普段のメールに貼り付けてください。";}
-});
 $("email-result").addEventListener("click",()=>{
   if(!CONTACT_EMAIL || !validateConsultation())return;
   updatePreview();
-  const subject=encodeURIComponent("AI業務改善の相談 / "+($("company").value.trim() || "企業名未入力"));
+  $("consent-dialog").showModal();
+});
+$("consent-no").addEventListener("click",()=>$("consent-dialog").close());
+$("consent-dialog").addEventListener("close",()=>$("email-result").focus());
+$("consent-yes").addEventListener("click",()=>{
+  if(!$("consent-dialog").open || !CONTACT_EMAIL || !validateConsultation())return;
+  $("consent-dialog").close();
+  const subject=encodeURIComponent("AI業務改善の相談 / "+$("company").value.trim());
   const body=encodeURIComponent(mailBody());
+  $("share-status").textContent="メールアプリで送信を完了してください。開かない場合は、下の案内をご確認ください。";
   window.location.href=`mailto:${CONTACT_EMAIL}?subject=${subject}&body=${body}`;
 });
 $("start").addEventListener("click",()=>{chime();$("intro").classList.add("hidden");$("about").classList.add("hidden");$("form-panel").classList.remove("hidden");showStep();});
 $("next").addEventListener("click",()=>{if(!answers[steps[current].key])return;chime("next");if(current<steps.length-1){current++;showStep();}else{showTreasure();}});
 $("back").addEventListener("click",()=>{if(current>0){chime("back");current--;showStep();}});
-$("restart").addEventListener("click",()=>{answers={};current=0;$("company").value="";$("consent").checked=false;$("copy-fallback").value="";$("copy-fallback").classList.add("hidden");$("mail-preview").textContent="";$("company-error").textContent="";$("preview").open=false;$("consult-panel").classList.add("hidden");$("result").classList.add("hidden");$("intro").classList.remove("hidden");$("about").classList.remove("hidden");window.scrollTo({top:0,behavior:"instant"});});
+$("restart").addEventListener("click",()=>{answers={};current=0;$("company").value="";$("consent-dialog").close();$("share-status").textContent="";$("mail-preview").textContent="";$("company-error").textContent="";$("preview").open=false;$("consult-panel").classList.add("hidden");$("result").classList.add("hidden");$("intro").classList.remove("hidden");$("about").classList.remove("hidden");window.scrollTo({top:0,behavior:"instant"});});
 
 let soundOn=true, audioContext;
 async function chime(complete=false){
